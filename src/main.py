@@ -1,11 +1,10 @@
 from typing import List
-
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
+import models, schemas
+from database import SessionLocal, engine
 
-import crud, models, schemas
-from db import SessionLocal, engine
-
+# create tables in database
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -20,6 +19,10 @@ def get_db():
         db.close()
 
 
-@app.post("/jar/create/name={jar_name}", response_model=schemas.Jar)
-def create_jar(Jar: schemas.JarCreate, db: Session = Depends(get_db)):
-    return crud.create_jar(db=db, Jar=Jar)
+@app.post("/jar")
+def create(request : schemas.Jar, db: Session = Depends(get_db)):
+    new_jar = models.Jar(name=request.name, value=(abs(request.value)))
+    db.add(new_jar)
+    db.commit()
+    db.refresh(new_jar)
+    return new_jar
