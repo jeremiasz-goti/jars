@@ -2,23 +2,23 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-# # base model interpretation
-# class JarBase(BaseModel):
-#     name: str
-#     # currency: str
-#     value: int
+# schema for jar creation
+class JarCreate(BaseModel):
+    name: str
+    value: int
 
-# # for creation
-# class JarCreate(JarBase):
-#     pass
-
-
-# for reading
+# schema for displaying jar
 class Jar(BaseModel):
-
     id : int
     name : str
     value : int
 
-    # class Config:
-    #     orm_mode = True
+# schema for adding to the jar
+class JarDeposit(BaseModel):
+    id : int
+    value : int
+
+# schema for taking from the jar
+class JarWithdraw(BaseModel):
+    id : int
+    value : int

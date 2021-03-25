@@ -19,10 +19,37 @@ def get_db():
         db.close()
 
 
+# create jar
 @app.post("/jar")
-def create(request : schemas.Jar, db: Session = Depends(get_db)):
+def create(request : schemas.JarCreate, db: Session = Depends(get_db)):
     new_jar = models.Jar(name=request.name, value=(abs(request.value)))
     db.add(new_jar)
     db.commit()
     db.refresh(new_jar)
     return new_jar
+
+# list jars
+@app.get("/jar/all")
+def list_jars(db: Session = Depends(get_db)):
+    return db.query(models.Jar).all()
+
+
+# add to jar
+@app.put("/jar/deposit")
+def deposit(request : schemas.JarDeposit, db: Session = Depends(get_db)):
+    jar = db.query(models.Jar).get(request.id)
+    jar.value += abs(request.value)
+    db.commit()
+    db.refresh(jar)
+    return jar
+
+# take from jar
+@app.put("/jar/withdraw")
+def withdraw(request : schemas.JarWithdraw, db: Session = Depends(get_db)):
+    jar = db.query(models.Jar).get(request.id)
+    jar.value -= abs(request.value)
+    db.commit()
+    db.refresh(jar)
+    return jar
+
+# show and sort jar operations
