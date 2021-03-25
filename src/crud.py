@@ -1,24 +1,15 @@
 from sqlalchemy.orm import Session
 
-import models
-from main import app
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-# list all jars
-@app.get("/jars/")
-async def list_jars():
-    return {"msg" : "list of all jars"}
+import models, schemas
 
 
-# create jar
-@app.get("/jars/create/name={jar_name}")
-async def jar_create(jar_name):
-    return {"msg" : "Jar {} created!".format(jar_name)}
+def list_jars(db: Session, user_id: int):
+    return db.query(models.Jar).filter(models.Jar.id == jar_id).first()
 
-# add to jar
-
-
-# take from jar
+def create_jar(db: Session, Jar: schemas.JarCreate):
+    db_jar = models.Jar(name=jar_name, value=0)
+    
+    db.add(db_jar)
+    db.commit()
+    db.refresh(db_jar)
+    return db_jar

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 # base model interpretation
 class JarBase(BaseModel):
     name: str
-    currency: str
+    # currency: str
     value: int
 
 # for creation
@@ -17,7 +17,7 @@ class Jar(BaseModel):
 
     id : int
     name : str
-    currency : str
+    # currency : str
     value : int
 
     class Config:
