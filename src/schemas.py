@@ -12,15 +12,12 @@ class Jar(BaseModel):
     id : int
     name : str
     value : int
-
-# schema for adding to the jar
-class JarDeposit(BaseModel):
-    id : int
-    value : int
-    title : str
+    
+    class Config():
+        orm_mode = True
 
 # schema for taking from the jar
-class JarWithdraw(BaseModel):
+class JarOperation(BaseModel):
     id : int
     value : int
     title : str
