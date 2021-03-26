@@ -32,3 +32,9 @@ class History(BaseModel):
     change : int
     date : str
     title : str
+
+# schema for transfering
+class Transfer(BaseModel):
+    from_id : int
+    to_id : int
+    value : int

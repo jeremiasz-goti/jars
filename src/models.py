@@ -22,5 +22,12 @@ class History(Base):
     date = Column(String, index=True)
     title = Column(String, index=True)
 
+class Transfers(Base):
+    __tablename__ = "transfers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    from_id = Column(Integer, index=True, nullable=False)
+    to_id = Column(Integer, index=True, nullable=False)
+
     
 
