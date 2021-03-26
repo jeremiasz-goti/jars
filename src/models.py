@@ -11,7 +11,6 @@ class Jar(Base):
     name = Column(String, index=True, nullable=False)
     value = Column(Integer, index=True)
 
-
 class History(Base):
     __tablename__ = "history"
 
@@ -28,6 +27,8 @@ class Transfers(Base):
     id = Column(Integer, primary_key=True, index=True)
     from_id = Column(Integer, index=True, nullable=False)
     to_id = Column(Integer, index=True, nullable=False)
+    value = Column(Integer, index=True, nullable=False)
+    date = Column(String, index=True)
 
     
 

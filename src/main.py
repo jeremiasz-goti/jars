@@ -82,6 +82,12 @@ def withdraw(request : schemas.JarWithdraw, db: Session = Depends(get_db)):
 def history(db: Session = Depends(get_db)):
     return db.query(models.History).all()
 
+# show all transfers
+@app.get("/history/transfers")
+def transfers_history(db: Session = Depends(get_db)):
+    return db.query(models.Transfers).all()
+
+
 # sort operations
 @app.get("/history/sort/sort={sort_type}")
 def sort_operations(sort_type : str, db: Session = Depends(get_db)):
@@ -105,10 +111,11 @@ def transfer(request : schemas.Transfer, db: Session = Depends(get_db)):
     to_jar.value += request.value
     db.commit()
 
-    log = models.Transfers(from_id=from_jar.id, to_id=to_jar.id)
+    log = models.Transfers(from_id=from_jar.id, to_id=to_jar.id, value=request.value, date=datetime.datetime.utcnow())
     db.add(log)
     db.commit()
 
-
     return {"msg" : "Transfer completed"}
+
+
     
