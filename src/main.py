@@ -7,28 +7,14 @@ from sqlalchemy import desc, asc
 from sqlalchemy.orm import Session
 
 import models, schemas, datetime
-from database import SessionLocal, engine
+from database import SessionLocal, engine, get_db
 
 # create tables in database
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-"""
-
-ROUTINGS
-
-"""
+# --- ROUTINGS ---
 
 # redirect to docs
 @app.get("/")
@@ -89,10 +75,15 @@ def transfer(request : schemas.Transfer, db: Session = Depends(get_db)):
 
         return {"msg" : "Transfer completed"}
 
-# show all operations
-@app.get("/history")
-def history(db: Session = Depends(get_db)):
-    return db.query(models.History).all()
+# show jar specific operations
+@app.get("/history/{jar_id}")
+def history(jar_id: int,db: Session = Depends(get_db)):
+    jar = db.query(models.Jar).get(jar_id)
+    if not jar:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={'detail' : f'No jar with id: '+ str(jar_id)})
+    else:
+        jar_history = db.query(models.History).filter(models.History.jar_id == jar_id).all()    
+        return jar_history
 
 # show all transfers
 @app.get("/history/transfers")
