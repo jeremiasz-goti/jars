@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
-import models, schemas
+import models, schemas, datetime
 from database import SessionLocal, engine
 
 # create tables in database
@@ -41,6 +41,11 @@ def deposit(request : schemas.JarDeposit, db: Session = Depends(get_db)):
     jar.value += abs(request.value)
     db.commit()
     db.refresh(jar)
+
+    log = models.History(jar_id=jar.id, jar_name=jar.name, change=request.value, date=datetime.datetime.utcnow())
+    db.add(log)
+    db.commit()
+
     return jar
 
 # take from jar
@@ -50,6 +55,14 @@ def withdraw(request : schemas.JarWithdraw, db: Session = Depends(get_db)):
     jar.value -= abs(request.value)
     db.commit()
     db.refresh(jar)
+
+    log = models.History(jar_id=jar.id, jar_name=jar.name, change=-abs(request.value), date=datetime.datetime.utcnow())
+    db.add(log)
+    db.commit()
+
     return jar
 
-# show and sort jar operations
+# show all operations
+@app.get("/history")
+def history(db: Session = Depends(get_db)):
+    return db.query(models.History).all()
