@@ -2,11 +2,6 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-# schema for jar creation
-class JarCreate(BaseModel):
-    name : str
-    value : int
-
 # schema for displaying jar
 class Jar(BaseModel):
     id : int
@@ -16,22 +11,29 @@ class Jar(BaseModel):
     class Config():
         orm_mode = True
 
-# schema for taking from the jar
+# schema for jar creation
+class JarCreate(BaseModel):
+    name : str
+
+# schema for jar operations
 class JarOperation(BaseModel):
     id : int
     value : int
     title : str
 
 # schema for displaying all operations for a jar
-class History(BaseModel):
-    jar_id : int
-    jar_name : str
-    change : int
-    date : str
+class History(BaseModel):    
     title : str
+    value : int
+    date : str
+    operation_type : str
+    
+    class Config():
+        orm_mode = True
 
 # schema for transfering
 class Transfer(BaseModel):
-    from_id : int
-    to_id : int
+    from_jar : int
+    to_jar : int
     value : int
+    title : str

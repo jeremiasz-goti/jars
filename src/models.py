@@ -8,27 +8,18 @@ class Jar(Base):
     __tablename__ = "jars"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True, nullable=False)
+    name = Column(String, index=True, unique=True, nullable=False)
     value = Column(Integer, index=True)
 
-class History(Base):
-    __tablename__ = "history"
-
+class AccountHistory(Base):
+    __tablename__ = "account_history"
+    
     id = Column(Integer, primary_key=True, index=True)
     jar_id = Column(Integer, index=True)
-    jar_name = Column(String, index=True, nullable=False)
-    change = Column(Integer)
+    value = Column(Integer)
     date = Column(String, index=True)
     title = Column(String, index=True)
-
-class Transfers(Base):
-    __tablename__ = "transfers"
-
-    id = Column(Integer, primary_key=True, index=True)
-    from_id = Column(Integer, index=True, nullable=False)
-    to_id = Column(Integer, index=True, nullable=False)
-    value = Column(Integer, index=True, nullable=False)
-    date = Column(String, index=True)
+    operation_type = Column(String)
 
     
 
