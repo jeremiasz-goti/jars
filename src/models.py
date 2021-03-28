@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from database import Base
 
+# database models for sqlalchemy
 
 class Jar(Base):
     __tablename__ = "jars"
@@ -10,6 +11,7 @@ class Jar(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, unique=True, nullable=False)
     value = Column(Integer, index=True)
+    currency = Column(String, nullable=False)
 
 class AccountHistory(Base):
     __tablename__ = "account_history"
