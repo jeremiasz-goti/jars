@@ -14,17 +14,21 @@ from database import SessionLocal, engine, get_db
 models.Base.metadata.create_all(bind=engine)
 
 # initialize app
-app = FastAPI()
+app = FastAPI(
+    title = "Jars API",
+    description = "Simple wallet system",
+    version = "1.0.0"
+)
 
 # --- ROUTINGS ---
 
 # redirect to docs
 @app.get("/", tags=["Docs"])
 def home():
-    return RedirectResponse("http://localhost:8000/docs/")
+    return RedirectResponse("/docs/")
 
 # create jar
-@app.post("/createjar", status_code=status.HTTP_201_CREATED, response_model=schemas.Jar, tags=["Jars"])
+@app.post("/createjar", status_code=status.HTTP_201_CREATED, response_model=schemas.Jar, tags=["Jar"])
 def create(name : str, request : schemas.JarCreate, currency: CurrencyModel = "PLN", db: Session = Depends(get_db)):
     # check for existing jars
     jar = db.query(models.Jar).filter(models.Jar.name == name).first()
@@ -42,12 +46,12 @@ def create(name : str, request : schemas.JarCreate, currency: CurrencyModel = "P
         return jar
 
 # list all jars
-@app.get("/jars/", response_model=List[schemas.Jar], tags=["Jars"])
+@app.get("/jars/", response_model=List[schemas.Jar], tags=["Jar"])
 def list_jars(db: Session = Depends(get_db)):
     return db.query(models.Jar).all()
 
 # show and sort jar specific operations
-@app.get("/jars/{jar_id}", response_model=List[schemas.History], tags=["Jars"])
+@app.get("/jars/{jar_id}", response_model=List[schemas.History], tags=["Jar"])
 def jar_history(jar_id: int, order_by: SortModel = "date", db: Session = Depends(get_db)):
     # check if jar exists
     jar = db.query(models.Jar).get(jar_id)
