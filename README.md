@@ -11,7 +11,7 @@ Simple wallet system.
 
 ## Tech
 
-Cipher Api is using:
+Jars is using:
 
 - [Python 3.8](https://www.python.org/)
 - [FastApi](https://fastapi.tiangolo.com/)
